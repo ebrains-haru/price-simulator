@@ -115,22 +115,34 @@ button {
     授業料：―円
   </div>
 
-  <div style="margin:10px 0; font-size:14px; text-align:center; color:#555;">
-    施設維持費　3,850円<br>
-    ＋<br>
-    ICT教材費　1,650円
-  </div>
+<div style="margin:10px 0; font-size:14px; text-align:center; color:#555;">
+  施設維持費　3,850円<br>
+  ICT教材費　1,650円
+</div>
 
-  <div id="total" style="
-    background:#ffffff;
-    border-radius:10px;
-    padding:14px;
-    font-size:20px;
-    font-weight:bold;
-    text-align:center;
-  ">
-    月額目安：―円
-  </div>
+<div id="total" style="
+  background:#ffffff;
+  border-radius:10px;
+  padding:14px;
+  font-size:20px;
+  font-weight:bold;
+  text-align:center;
+">
+  月額目安（税込）：―円
+</div>
+
+<div style="
+  margin-top:8px;
+  font-size:12px;
+  color:#999;
+  text-align:center;
+  line-height:1.5;
+">
+  ＋<br>
+  月額教材費別途<br>
+  ※選択教科・数によって異なります
+</div>
+
 </div>
 
 
@@ -270,7 +282,7 @@ function calculate() {
     `授業料：${tuitionPrice.toLocaleString()}円`;
 
   document.getElementById("total").textContent =
-    `月額目安：${totalPrice.toLocaleString()}円`;
+  `月額目安（税込）：${totalPrice.toLocaleString()}円`;
 
   result.style.display = "block";
 }
