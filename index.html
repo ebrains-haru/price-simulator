@@ -7,28 +7,28 @@
 
 <style>
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-  background: #fff;
   margin: 0;
   padding: 0;
+  background: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 }
 
 .simulator {
   max-width: 520px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 20px;
   background: #fff7e6;
-  border-radius: 16px;
+  box-sizing: border-box;
 }
 
 h1 {
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 24px;
+  font-size: 22px;
+  margin-bottom: 20px;
 }
 
 .block {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 label {
@@ -49,7 +49,7 @@ select option[value=""] {
 
 button {
   width: 100%;
-  margin-top: 24px;
+  margin-top: 20px;
   padding: 14px;
   font-size: 16px;
   font-weight: bold;
@@ -60,10 +60,10 @@ button {
 }
 
 .result {
-  margin-top: 28px;
-  padding: 16px;
-  background: #fff;
-  border-radius: 12px;
+  margin-top: 24px;
+  padding: 14px;
+  background: #ffffff;
+  border-radius: 10px;
   font-size: 18px;
   font-weight: bold;
   text-align: center;
@@ -78,23 +78,19 @@ button {
 
   <!-- 学年 -->
   <div class="block">
-    <label>学年</label>
+    <label for="grade">学年</label>
     <select id="grade">
       <option value="" selected disabled>選択してください</option>
       <option value="g1">小1</option>
       <option value="g2">小2</option>
       <option value="g34">小3・小4</option>
       <option value="g56">小5・小6</option>
-      <option value="j12">中1・中2</option>
-      <option value="j3">中3</option>
-      <option value="h12">高1・高2</option>
-      <option value="h3">高3</option>
     </select>
   </div>
 
   <!-- コース -->
   <div class="block">
-    <label>コース</label>
+    <label for="course">コース</label>
     <select id="course">
       <option value="" selected disabled>選択してください</option>
     </select>
@@ -102,90 +98,91 @@ button {
 
   <!-- 週回数 -->
   <div class="block">
-    <label>週回数</label>
+    <label for="frequency">週回数</label>
     <select id="frequency">
       <option value="" selected disabled>選択してください</option>
     </select>
   </div>
 
-  <button onclick="calc()">料金を計算する</button>
+  <button onclick="calculate()">料金を計算する</button>
 
   <div id="result" class="result" style="display:none;"></div>
 </div>
 
 <script>
-const data = {
+const priceData = {
   g1: {
     wakuwaku: {
       name: "わくわく こくご・さんすうコース",
-      prices: {2:9900, 3:11000, 4:14300}
+      prices: {2: 9900, 3: 11000, 4: 14300}
     }
   },
   g2: {
     wakuwaku: {
       name: "わくわく こくご・さんすうコース",
-      prices: {2:9900, 3:11000, 4:14300}
+      prices: {2: 9900, 3: 11000, 4: 14300}
     }
   },
   g34: {
     elementary: {
       name: "小学生コース",
-      prices: {2:11000, 3:12100, 4:15400, 5:18700}
+      prices: {2: 11000, 3: 12100, 4: 15400, 5: 18700}
     },
     exam: {
       name: "中学受験コース",
-      prices: {2:17600, 3:23100, 4:28600}
+      prices: {2: 17600, 3: 23100, 4: 28600}
     }
   },
   g56: {
     elementary: {
       name: "小学生コース",
-      prices: {1:16500, 2:19800, 3:25300, 4:30800}
+      prices: {1: 16500, 2: 19800, 3: 25300, 4: 30800}
     },
     exam: {
       name: "中学受験コース",
-      prices: {2:19800, 3:25300, 4:30800}
+      prices: {2: 19800, 3: 25300, 4: 30800}
     }
   }
 };
 
-const gradeSel = document.getElementById("grade");
-const courseSel = document.getElementById("course");
-const freqSel = document.getElementById("frequency");
+const grade = document.getElementById("grade");
+const course = document.getElementById("course");
+const freq = document.getElementById("frequency");
+const result = document.getElementById("result");
 
-gradeSel.addEventListener("change", () => {
-  courseSel.innerHTML = `<option value="" selected disabled>選択してください</option>`;
-  freqSel.innerHTML = `<option value="" selected disabled>選択してください</option>`;
+grade.addEventListener("change", () => {
+  course.innerHTML = '<option value="" selected disabled>選択してください</option>';
+  freq.innerHTML = '<option value="" selected disabled>選択してください</option>';
+  result.style.display = "none";
 
-  const courses = data[gradeSel.value];
-  for (let key in courses) {
+  const courses = priceData[grade.value];
+  for (const key in courses) {
     const opt = document.createElement("option");
     opt.value = key;
     opt.textContent = courses[key].name;
-    courseSel.appendChild(opt);
+    course.appendChild(opt);
   }
 });
 
-courseSel.addEventListener("change", () => {
-  freqSel.innerHTML = `<option value="" selected disabled>選択してください</option>`;
+course.addEventListener("change", () => {
+  freq.innerHTML = '<option value="" selected disabled>選択してください</option>';
+  result.style.display = "none";
 
-  const prices = data[gradeSel.value][courseSel.value].prices;
-  for (let w in prices) {
+  const prices = priceData[grade.value][course.value].prices;
+  for (const w in prices) {
     const opt = document.createElement("option");
     opt.value = w;
     opt.textContent = `週${w}`;
-    freqSel.appendChild(opt);
+    freq.appendChild(opt);
   }
 });
 
-function calc() {
-  if (!gradeSel.value || !courseSel.value || !freqSel.value) {
+function calculate() {
+  if (!grade.value || !course.value || !freq.value) {
     alert("すべて選択してください");
     return;
   }
-
-  const price = data[gradeSel.value][courseSel.value].prices[freqSel.value];
-  const result = document.getElementById("result");
+  const price = priceData[grade.value][course.value].prices[freq.value];
   result.style.display = "block";
   result.textContent = `月額目安：${price.toLocaleString()}円`;
 }
