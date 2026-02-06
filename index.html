@@ -110,7 +110,29 @@ button {
 
   <button onclick="calculate()">料金を計算する</button>
 
-  <div id="result" class="result" style="display:none;"></div>
+  <div id="result" style="display:none; margin-top:24px;">
+  <div id="tuition" style="font-size:16px; text-align:center; font-weight:bold;">
+    授業料：―円
+  </div>
+
+  <div style="margin:10px 0; font-size:14px; text-align:center; color:#555;">
+    施設維持費　3,850円<br>
+    ＋<br>
+    ICT教材費　1,650円
+  </div>
+
+  <div id="total" style="
+    background:#ffffff;
+    border-radius:10px;
+    padding:14px;
+    font-size:20px;
+    font-weight:bold;
+    text-align:center;
+  ">
+    月額目安：―円
+  </div>
+</div>
+
 
   <div
   style="margin-top:10px;font-size:11px;color:#999;line-height:1.6;opacity:0.9;">
@@ -238,11 +260,21 @@ function calculate() {
   }
 
   const group = gradeGroup[grade.value];
-  const price = priceData[group][course.value].prices[freq.value];
+  const tuitionPrice = priceData[group][course.value].prices[freq.value];
+
+  const facilityFee = 3850;
+  const ictFee = 1650;
+  const totalPrice = tuitionPrice + facilityFee + ictFee;
+
+  document.getElementById("tuition").textContent =
+    `授業料：${tuitionPrice.toLocaleString()}円`;
+
+  document.getElementById("total").textContent =
+    `月額目安：${totalPrice.toLocaleString()}円`;
 
   result.style.display = "block";
-  result.textContent = `月額目安：${price.toLocaleString()}円`;
 }
+
 </script>
 
 </body>
