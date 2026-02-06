@@ -1,168 +1,193 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>月額料金シミュレーター</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-      background: #fff;
-    }
-    .simulator-wrapper {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 24px 16px 40px;
-      box-sizing: border-box;
-    }
-    h1 {
-      text-align: center;
-      font-size: 26px;
-      margin-bottom: 24px;
-      color: #ff7a00;
-    }
-    .block {
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-    select, button {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-    button {
-      background: #ffb400;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 24px;
-    }
-    .result {
-      margin-top: 32px;
-      padding: 20px;
-      background: #f6fff0;
-      border: 2px solid #8bc34a;
-      border-radius: 8px;
-      text-align: center;
-    }
-    .result span {
-      display: block;
-      font-size: 28px;
-      font-weight: bold;
-      color: #ff5722;
-      margin-top: 8px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月額料金シミュレーター</title>
+
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  background: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+.simulator {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #fff7e6;
+  border-radius: 16px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.block {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+select option[value=""] {
+  color: #999;
+}
+
+button {
+  width: 100%;
+  margin-top: 24px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ff9800, #8bc34a);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+}
+
+.result {
+  margin-top: 28px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}
+</style>
 </head>
 
 <body>
-<div class="simulator-wrapper">
 
+<div class="simulator">
   <h1>月額料金シミュレーター</h1>
 
+  <!-- 学年 -->
   <div class="block">
-    <label>学年を選択</label>
+    <label>学年</label>
     <select id="grade">
       <option value="" selected disabled>選択してください</option>
-      <option value="">選択してください</option>
-      <option value="l12">小1・小2</option>
-      <option value="l34">小3・小4</option>
-      <option value="l56">小5・小6</option>
+      <option value="g1">小1</option>
+      <option value="g2">小2</option>
+      <option value="g34">小3・小4</option>
+      <option value="g56">小5・小6</option>
+      <option value="j12">中1・中2</option>
+      <option value="j3">中3</option>
+      <option value="h12">高1・高2</option>
+      <option value="h3">高3</option>
     </select>
   </div>
 
+  <!-- コース -->
   <div class="block">
-    <label>コースを選択</label>
-    <select id="course"></select>
+    <label>コース</label>
+    <select id="course">
+      <option value="" selected disabled>選択してください</option>
+    </select>
   </div>
 
+  <!-- 週回数 -->
   <div class="block">
-    <label>週回数を選択</label>
-    <select id="plan"></select>
+    <label>週回数</label>
+    <select id="frequency">
+      <option value="" selected disabled>選択してください</option>
+    </select>
   </div>
 
-  <button onclick="calculate()">料金を計算する</button>
+  <button onclick="calc()">料金を計算する</button>
 
-  <div class="result" id="result" style="display:none;">
-    月額目安料金
-    <span id="price"></span>
-  </div>
-
+  <div id="result" class="result" style="display:none;"></div>
 </div>
 
 <script>
 const data = {
-  l12: {
-    "わくわく こくご・さんすうコース": {
-      "週2（45分）": 9900,
-      "週3（45分）": 11000,
-      "週4（45分）": 14300
+  g1: {
+    wakuwaku: {
+      name: "わくわく こくご・さんすうコース",
+      prices: {2:9900, 3:11000, 4:14300}
     }
   },
-  l34: {
-    "小学生コース": {
-      "週2（45分）": 11000,
-      "週3（45分）": 12100,
-      "週4（45分）": 15400,
-      "週5（45分）": 18700
-    },
-    "中学受験コース": {
-      "週2（90分）": 17600,
-      "週3（90分）": 23100,
-      "週4（90分）": 28600
+  g2: {
+    wakuwaku: {
+      name: "わくわく こくご・さんすうコース",
+      prices: {2:9900, 3:11000, 4:14300}
     }
   },
-  l56: {
-    "小学生コース": {
-      "週1（90分+45分）": 16500,
-      "週2（90分）": 19800,
-      "週3（90分）": 25300,
-      "週4（90分）": 30800
+  g34: {
+    elementary: {
+      name: "小学生コース",
+      prices: {2:11000, 3:12100, 4:15400, 5:18700}
     },
-    "中学受験コース": {
-      "週2（90分）": 19800,
-      "週3（90分）": 25300,
-      "週4（90分）": 30800
+    exam: {
+      name: "中学受験コース",
+      prices: {2:17600, 3:23100, 4:28600}
+    }
+  },
+  g56: {
+    elementary: {
+      name: "小学生コース",
+      prices: {1:16500, 2:19800, 3:25300, 4:30800}
+    },
+    exam: {
+      name: "中学受験コース",
+      prices: {2:19800, 3:25300, 4:30800}
     }
   }
 };
 
-const grade = document.getElementById("grade");
-const course = document.getElementById("course");
-const plan = document.getElementById("plan");
+const gradeSel = document.getElementById("grade");
+const courseSel = document.getElementById("course");
+const freqSel = document.getElementById("frequency");
 
-grade.addEventListener("change", () => {
-  course.innerHTML = "";
-  plan.innerHTML = "";
-  const courses = data[grade.value];
-  for (let c in courses) {
-    course.innerHTML += `<option value="${c}">${c}</option>`;
-  }
-  course.dispatchEvent(new Event("change"));
-});
+gradeSel.addEventListener("change", () => {
+  courseSel.innerHTML = `<option value="" selected disabled>選択してください</option>`;
+  freqSel.innerHTML = `<option value="" selected disabled>選択してください</option>`;
 
-course.addEventListener("change", () => {
-  plan.innerHTML = "";
-  const plans = data[grade.value][course.value];
-  for (let p in plans) {
-    plan.innerHTML += `<option value="${plans[p]}">${p}</option>`;
+  const courses = data[gradeSel.value];
+  for (let key in courses) {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = courses[key].name;
+    courseSel.appendChild(opt);
   }
 });
 
-function calculate() {
-  const price = plan.value;
-  if (!price) return;
-  document.getElementById("price").textContent =
-    Number(price).toLocaleString() + "円（税込）";
-  document.getElementById("result").style.display = "block";
+courseSel.addEventListener("change", () => {
+  freqSel.innerHTML = `<option value="" selected disabled>選択してください</option>`;
+
+  const prices = data[gradeSel.value][courseSel.value].prices;
+  for (let w in prices) {
+    const opt = document.createElement("option");
+    opt.value = w;
+    opt.textContent = `週${w}`;
+    freqSel.appendChild(opt);
+  }
+});
+
+function calc() {
+  if (!gradeSel.value || !courseSel.value || !freqSel.value) {
+    alert("すべて選択してください");
+    return;
+  }
+
+  const price = data[gradeSel.value][courseSel.value].prices[freqSel.value];
+  const result = document.getElementById("result");
+  result.style.display = "block";
+  result.textContent = `月額目安：${price.toLocaleString()}円`;
 }
 </script>
 
