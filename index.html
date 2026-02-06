@@ -43,10 +43,6 @@ select {
   font-size: 16px;
 }
 
-select option[value=""] {
-  color: #999;
-}
-
 button {
   width: 100%;
   margin-top: 20px;
@@ -78,7 +74,7 @@ button {
 
   <!-- 学年 -->
   <div class="block">
-    <label for="grade">学年</label>
+    <label>学年</label>
     <select id="grade">
       <option value="" selected disabled>選択してください</option>
       <option value="e1">小1</option>
@@ -98,7 +94,7 @@ button {
 
   <!-- コース -->
   <div class="block">
-    <label for="course">コース</label>
+    <label>コース</label>
     <select id="course">
       <option value="" selected disabled>選択してください</option>
     </select>
@@ -106,7 +102,7 @@ button {
 
   <!-- 週回数 -->
   <div class="block">
-    <label for="frequency">週回数</label>
+    <label>週回数</label>
     <select id="frequency">
       <option value="" selected disabled>選択してください</option>
     </select>
@@ -115,60 +111,84 @@ button {
   <button onclick="calculate()">料金を計算する</button>
 
   <div id="result" class="result" style="display:none;"></div>
-  
-<div
-  class="result-note"
-  style="
-    margin-top:10px;
-    font-size:11px;
-    color:#999;
-    line-height:1.5;
-    opacity:0.9;
-  ">
-  ※表示金額は月額の目安です。<br>
-  ※割引制度・キャンペーン情報等詳細は校舎担当者にお問い合わせください。<br>
-  ※選択教科によって教材費が加算されます。
-</div>
-  
+
+  <div
+    style="margin-top:10px;font-size:11px;color:#999;line-height:1.5;opacity:0.9;">
+    ※表示金額は月額の目安です。割引制度・キャンペーン情報等詳細は校舎担当者にお問い合わせください。<br>
+    ※入会金は別途。
+  </div>
 </div>
 
 <script>
-/* 学年 → 内部カテゴリ対応 */
-const gradeMap = {
-  e1: "g12",
-  e2: "g12",
-  e3: "g34",
-  e4: "g34",
-  e5: "g56",
-  e6: "g56"
+/* 学年 → グループ */
+const gradeGroup = {
+  e1: "g12", e2: "g12",
+  e3: "g34", e4: "g34",
+  e5: "g56", e6: "g56",
+  j1: "j12", j2: "j12",
+  j3: "j3",
+  h1: "h12", h2: "h12",
+  h3: "h3"
 };
 
-/* 料金データ */
+/* 料金データ（完全反映） */
 const priceData = {
   g12: {
     wakuwaku: {
       name: "わくわく こくご・さんすうコース",
-      prices: {2: 9900, 3: 11000, 4: 14300}
+      prices: {1:9900, 2:11000, 3:14300}
     }
   },
   g34: {
     elementary: {
       name: "小学生コース",
-      prices: {2: 11000, 3: 12100, 4: 15400, 5: 18700}
+      prices: {2:11000, 3:12100, 4:15400, 5:18700}
     },
     exam: {
       name: "中学受験コース",
-      prices: {2: 17600, 3: 23100, 4: 28600}
+      prices: {2:17600, 3:23100, 4:28600}
     }
   },
   g56: {
     elementary: {
       name: "小学生コース",
-      prices: {1: 16500, 2: 19800, 3: 25300, 4: 30800}
+      prices: {1:16500, 2:19800, 3:25300, 4:30800}
     },
     exam: {
       name: "中学受験コース",
-      prices: {2: 19800, 3: 25300, 4: 30800}
+      prices: {2:19800, 3:25300, 4:30800}
+    }
+  },
+  j12: {
+    junior: {
+      name: "中学生コース",
+      prices: {2:25300, 3:34100, 4:42900}
+    }
+  },
+  j3: {
+    examhs: {
+      name: "高校受験コース",
+      prices: {2:26950, 3:37950, 4:48950}
+    }
+  },
+  h12: {
+    high: {
+      name: "高校生コース",
+      prices: {1:5500}
+    },
+    high1on1: {
+      name: "高校生個別指導コース",
+      prices: {2:20900, 3:28600, 4:36300}
+    }
+  },
+  h3: {
+    high: {
+      name: "高校生コース",
+      prices: {1:5500}
+    },
+    high1on1: {
+      name: "高校生個別指導コース",
+      prices: {2:22000, 3:29700, 4:38500}
     }
   }
 };
@@ -183,10 +203,9 @@ grade.addEventListener("change", () => {
   freq.innerHTML = '<option value="" selected disabled>選択してください</option>';
   result.style.display = "none";
 
-  const group = gradeMap[grade.value];
-  if (!group) return;
-
+  const group = gradeGroup[grade.value];
   const courses = priceData[group];
+
   for (const key in courses) {
     const opt = document.createElement("option");
     opt.value = key;
@@ -199,7 +218,7 @@ course.addEventListener("change", () => {
   freq.innerHTML = '<option value="" selected disabled>選択してください</option>';
   result.style.display = "none";
 
-  const group = gradeMap[grade.value];
+  const group = gradeGroup[grade.value];
   const prices = priceData[group][course.value].prices;
 
   for (const w in prices) {
@@ -216,7 +235,7 @@ function calculate() {
     return;
   }
 
-  const group = gradeMap[grade.value];
+  const group = gradeGroup[grade.value];
   const price = priceData[group][course.value].prices[freq.value];
 
   result.style.display = "block";
