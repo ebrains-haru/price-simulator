@@ -27,9 +27,7 @@ h1 {
   margin-bottom: 24px;
 }
 
-.block {
-  margin-bottom: 18px;
-}
+.block { margin-bottom: 18px; }
 
 label {
   display: block;
@@ -55,10 +53,7 @@ button {
   border-radius: 999px;
 }
 
-.result-wrap {
-  margin-top: 24px;
-  display: none;
-}
+.result-wrap { margin-top: 24px; display: none; }
 
 #tuition {
   font-size: 16px;
@@ -80,7 +75,6 @@ button {
 </head>
 
 <body>
-
 <div class="simulator">
   <h1>月額料金シミュレーター</h1>
 
@@ -97,6 +91,9 @@ button {
       <option value="j1">中1</option>
       <option value="j2">中2</option>
       <option value="j3">中3</option>
+      <option value="h1">高1</option>
+      <option value="h2">高2</option>
+      <option value="h3">高3</option>
     </select>
   </div>
 
@@ -117,7 +114,6 @@ button {
   <button onclick="calculate()">料金を計算する</button>
 
   <div id="resultWrap" class="result-wrap">
-
     <div id="tuition">授業料：―円</div>
 
     <div id="fixedFees" style="margin:10px 0; font-size:14px; text-align:center; color:#555;">
@@ -127,17 +123,12 @@ button {
 
     <div id="total">月額目安（税込）：―円</div>
 
-    <div id="materialNote" style="margin:10px 0; font-size:14px; text-align:center; color:#555;">
-      ＋<br>
-      月額教材費別途<br>
-      ※選択教科・数によって異なります
-    </div>
+    <div id="materialNote" style="margin:10px 0; font-size:14px; text-align:center; color:#555;"></div>
 
-    <div style="margin-top:10px;font-size:11px;color:#999;line-height:1.6;opacity:0.9;">
+    <div style="margin-top:10px;font-size:11px;color:#999;line-height:1.6;">
       ※表示金額は月額の目安です。<br>
       ※割引制度・キャンペーン情報等詳細は校舎担当者にお問い合わせください。
     </div>
-
   </div>
 </div>
 
@@ -147,12 +138,14 @@ const gradeGroup = {
   e3:"g34", e4:"g34",
   e5:"g56", e6:"g56",
   j1:"j12", j2:"j12",
-  j3:"j3"
+  j3:"j3",
+  h1:"h12", h2:"h12",
+  h3:"h3"
 };
 
 const priceData = {
   g12:{
-    wakuwaku:{name:"わくわく こくご・さんすうコース",prices:{1:9900,2:11000,3:14300}},
+    wakuwaku:{name:"わくわく こくご・さんすうコース",prices:{2:9900,3:11000,4:14300}},
     subscription:{name:"小学生サブスクコース",flat:19800,limits:{6:"週6まで通い放題（1コマ45分）"}}
   },
   g34:{
@@ -172,6 +165,14 @@ const priceData = {
   j3:{
     examhs:{name:"高校受験コース",prices:{2:26950,3:37950,4:48950}},
     subscription:{name:"中学生サブスクコース",flat:48950,limits:{3:"週3まで通い放題（1コマ90分）"}}
+  },
+  h12:{
+    high:{name:"高校生コース",prices:{1:5500}},
+    high1on1:{name:"高校生個別指導コース",prices:{2:20900,3:28600,4:36300}}
+  },
+  h3:{
+    high:{name:"高校生コース",prices:{1:5500}},
+    high1on1:{name:"高校生個別指導コース",prices:{2:22000,3:29700,4:38500}}
   }
 };
 
@@ -228,38 +229,26 @@ function calculate(){
 
   const group=gradeGroup[grade.value];
   const data=priceData[group][course.value];
+  const materialNote=document.getElementById("materialNote");
 
   let tuition,total;
-  const materialNote=document.getElementById("materialNote");
 
   if(data.flat){
     tuition=data.flat;
     total=tuition;
     document.getElementById("fixedFees").style.display="none";
-
-    materialNote.innerHTML=`
-      ＋<br>
-      月額教材費込み<br>
-      ※ただし英語を選択の場合のみ、別途教材費1,100円が毎月かかります。
-    `;
+    materialNote.innerHTML="＋<br>月額教材費込み<br>※ただし英語を選択の場合のみ、別途教材費1,100円が毎月かかります。";
   }else{
     tuition=data.prices[freq.value];
     total=tuition+3850+1650;
     document.getElementById("fixedFees").style.display="block";
-
-    materialNote.innerHTML=`
-      ＋<br>
-      月額教材費別途<br>
-      ※選択教科・数によって異なります
-    `;
+    materialNote.innerHTML="＋<br>月額教材費別途<br>※選択教科・数によって異なります";
   }
 
   document.getElementById("tuition").textContent=`授業料：${tuition.toLocaleString()}円`;
   document.getElementById("total").textContent=`月額目安（税込）：${total.toLocaleString()}円`;
-
   resultWrap.style.display="block";
 }
 </script>
-
 </body>
 </html>
