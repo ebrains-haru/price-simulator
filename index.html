@@ -30,7 +30,6 @@ h1{
   border-radius:14px;
 }
 
-/* タイトル下注釈（教材費注記と同じ見た目） */
 .title-note{
   margin:0 0 26px;
   font-size:14px;
@@ -140,13 +139,18 @@ button{
 <label>学年</label>
 <select id="grade">
 <option value="" selected disabled>選択してください</option>
-<option value="e1">小1</option><option value="e2">小2</option>
-<option value="e3">小3</option><option value="e4">小4</option>
-<option value="e5">小5</option><option value="e6">小6</option>
-<option value="j1">中1</option><option value="j2">中2</option>
+<option value="e12">小1</option>
+<option value="e12">小2</option>
+<option value="e34">小3</option>
+<option value="e34">小4</option>
+<option value="e56">小5</option>
+<option value="e56">小6</option>
+<option value="j12">中1</option>
+<option value="j12">中2</option>
 <option value="j3">中3</option>
-<option value="h1">高1</option><option value="h2">高2</option>
-<option value="h3">高3</option>
+<option value="h">高1</option>
+<option value="h">高2</option>
+<option value="h">高3</option>
 </select>
 </div>
 
@@ -167,104 +171,151 @@ button{
 <button onclick="calculate()">料金を計算する</button>
 
 <div id="resultWrap" class="result-wrap">
-<div id="tuition"></div>
+  <div id="tuition"></div>
 
-<div id="fixedFees" class="fee-block">
-施設維持費　3,850円<br>
-ICT教材費　1,650円
-</div>
+  <div id="fixedFees" class="fee-block">
+    施設維持費　3,850円<br>
+    ICT教材費　1,650円
+  </div>
 
-<div id="total"></div>
+  <div id="total"></div>
 
-<div id="materialNote" class="fee-block"></div>
+  <div id="materialNote" class="fee-block"></div>
 
-<a class="reserve-btn" href="https://one-juku.com/contact/" target="_blank" rel="noopener">
-無料体験・お問い合わせはこちら
-</a>
+  <a class="reserve-btn" href="https://one-juku.com/contact/" target="_blank" rel="noopener">
+    無料体験・お問い合わせはこちら
+  </a>
 
-<div class="small-note">
-※表示金額は月額の目安です。<br>
-※別途料金・割引制度・キャンペーン情報等詳細は校舎担当者にお問い合わせください。
-</div>
+  <div class="small-note">
+    ※表示金額は月額の目安です。<br>
+    ※別途料金・割引制度・キャンペーン情報等詳細は校舎担当者にお問い合わせください。
+  </div>
 </div>
 
 </div>
 
 <script>
-const data={
-e1:{waku:{'週2（45分）':9900,'週3（45分）':11000,'週4（45分）':14300},sub:19800},
-e2:{waku:{'週2（45分）':9900,'週3（45分）':11000,'週4（45分）':14300},sub:19800},
-e3:{elem:{'週2（45分）':11000,'週3（45分）':12100,'週4（45分）':15400,'週5（45分）':18700},exam:{'週2（90分）':17600,'週3（90分）':23100,'週4（90分）':28600},sub:24750},
-e4:{elem:{'週2（45分）':11000,'週3（45分）':12100,'週4（45分）':15400,'週5（45分）':18700},exam:{'週2（90分）':17600,'週3（90分）':23100,'週4（90分）':28600},sub:24750},
-e5:{elem:{'週1（90分＋45分）':16500,'週2（90分）':19800,'週3（90分）':25300,'週4（90分）':30800},exam:{'週2（90分）':19800,'週3（90分）':25300,'週4（90分）':30800},sub:29700},
-e6:{elem:{'週1（90分＋45分）':16500,'週2（90分）':19800,'週3（90分）':25300,'週4（90分）':30800},exam:{'週2（90分）':19800,'週3（90分）':25300,'週4（90分）':30800},sub:29700},
-j1:{junior:{'週2（90分）':25300,'週3（90分）':34100,'週4（90分）':42900},sub:41800},
-j2:{junior:{'週2（90分）':25300,'週3（90分）':34100,'週4（90分）':42900},sub:41800},
-j3:{examhs:{'週2（90分）':26950,'週3（90分）':37950,'週4（90分）':48950},sub:48950},
-h1:{high:{'週1（45分）':5500},ind:{'週2（45分）':20900,'週3（45分）':28600,'週4（45分）':36300}},
-h2:{high:{'週1（45分）':5500},ind:{'週2（45分）':20900,'週3（45分）':28600,'週4（45分）':36300}},
-h3:{high:{'週1（45分）':5500},ind3:{'週2（45分）':22000,'週3（45分）':29700,'週4（45分）':38500}}
+const COURSE_DATA={
+e12:[
+ {name:"わくわく こくご・さんすうコース",sub:false,options:[
+  {label:"週2（45分）",price:9900},
+  {label:"週3（45分）",price:11000},
+  {label:"週4（45分）",price:14300}
+ ]},
+ {name:"小学生サブスクコース",sub:true,
+  label:"週6コマまで通い放題（1コマ45分）",price:19800}
+],
+e34:[
+ {name:"小学生コース",sub:false,options:[
+  {label:"週2（45分）",price:11000},
+  {label:"週3（45分）",price:12100},
+  {label:"週4（45分）",price:15400},
+  {label:"週5（45分）",price:18700}
+ ]},
+ {name:"中学受験コース",sub:false,options:[
+  {label:"週2（90分）",price:17600},
+  {label:"週3（90分）",price:23100},
+  {label:"週4（90分）",price:28600}
+ ]},
+ {name:"小学生サブスクコース",sub:true,
+  label:"週6コマ通い放題（1コマ45分）",price:24750}
+],
+e56:[
+ {name:"小学生コース",sub:false,options:[
+  {label:"週1（90分＋45分）",price:16500},
+  {label:"週2（90分）",price:19800},
+  {label:"週3（90分）",price:25300},
+  {label:"週4（90分）",price:30800}
+ ]},
+ {name:"中学受験コース",sub:false,options:[
+  {label:"週2（90分）",price:19800},
+  {label:"週3（90分）",price:25300},
+  {label:"週4（90分）",price:30800}
+ ]},
+ {name:"小学生サブスクコース",sub:true,
+  label:"週3コマまで通い放題（1コマ90分）",price:29700}
+],
+j12:[
+ {name:"中学生コース",sub:false,options:[
+  {label:"週2（90分）",price:25300},
+  {label:"週3（90分）",price:34100},
+  {label:"週4（90分）",price:42900}
+ ]},
+ {name:"中学生サブスクコース",sub:true,
+  label:"週3コマまで通い放題（1コマ90分）",price:41800}
+],
+j3:[
+ {name:"高校受験コース",sub:false,options:[
+  {label:"週2（90分）",price:26950},
+  {label:"週3（90分）",price:37950},
+  {label:"週4（90分）",price:48950}
+ ]},
+ {name:"中学生サブスクコース",sub:true,
+  label:"週3コマまで通い放題（1コマ90分）",price:48950}
+],
+h:[
+ {name:"高校生コース",sub:false,options:[
+  {label:"週1（45分）",price:5500}
+ ]},
+ {name:"高校生個別指導コース",sub:false,options:[
+  {label:"週2（45分）",price:20900},
+  {label:"週3（45分）",price:28600},
+  {label:"週4（45分）",price:36300}
+ ]}
+]
 };
 
-const gradeSel=document.getElementById('grade');
-const courseSel=document.getElementById('course');
-const freqSel=document.getElementById('frequency');
+const grade=document.getElementById("grade");
+const course=document.getElementById("course");
+const freq=document.getElementById("frequency");
 
-gradeSel.onchange=()=>{
-  courseSel.innerHTML='<option disabled selected>選択してください</option>';
-  freqSel.innerHTML='<option disabled selected>選択してください</option>';
-  const g=data[gradeSel.value];
-  Object.keys(g).forEach(k=>{
-    const o=document.createElement('option');
-    o.value=k;
-    o.textContent={
-      waku:'わくわく こくご・さんすうコース',
-      elem:'小学生コース',
-      exam:'中学受験コース',
-      junior:'中学生コース',
-      examhs:'高校受験コース',
-      high:'高校生コース',
-      ind:'高校生個別指導コース',
-      ind3:'高校生個別指導コース',
-      sub:'サブスクコース'
-    }[k];
-    courseSel.appendChild(o);
-  });
+grade.onchange=()=>{
+ course.innerHTML='<option disabled selected>選択してください</option>';
+ freq.innerHTML='<option disabled selected>選択してください</option>';
+ COURSE_DATA[grade.value].forEach((c,i)=>{
+  const o=document.createElement("option");
+  o.value=i;
+  o.textContent=c.name;
+  course.appendChild(o);
+ });
 };
 
-courseSel.onchange=()=>{
-  freqSel.innerHTML='<option disabled selected>選択してください</option>';
-  const f=data[gradeSel.value][courseSel.value];
-  if(typeof f==='number'){
-    const o=document.createElement('option');
-    o.value='sub';
-    o.textContent='通い放題';
-    freqSel.appendChild(o);
-    return;
-  }
-  Object.keys(f).forEach(k=>{
-    const o=document.createElement('option');
-    o.value=k;
-    o.textContent=k;
-    freqSel.appendChild(o);
+course.onchange=()=>{
+ freq.innerHTML='<option disabled selected>選択してください</option>';
+ const c=COURSE_DATA[grade.value][course.value];
+ if(c.sub){
+  const o=document.createElement("option");
+  o.value=c.price;
+  o.textContent=c.label;
+  freq.appendChild(o);
+ }else{
+  c.options.forEach(o2=>{
+   const o=document.createElement("option");
+   o.value=o2.price;
+   o.textContent=o2.label;
+   freq.appendChild(o);
   });
+ }
 };
 
 function calculate(){
-  const g=gradeSel.value,c=courseSel.value,f=freqSel.value;
-  if(!g||!c||!f)return;
-  const d=data[g][c];
-  let tuition=typeof d==='number'?d:d[f];
-  let total=tuition;
-  document.getElementById('fixedFees').style.display=(c==='sub')?'none':'block';
-  if(c!=='sub')total+=5500;
-  document.getElementById('tuition').textContent='授業料：'+tuition.toLocaleString()+'円';
-  document.getElementById('total').textContent='月額目安（税込）：'+total.toLocaleString()+'円';
-  document.getElementById('materialNote').innerHTML=
-    c==='sub'
-    ?'＋<br>月額教材費込み<br>※ただし英語選択時は別途教材費1,100円'
-    :'＋<br>月額教材費別途<br>※選択教科・数によって異なります';
-  document.getElementById('resultWrap').style.display='block';
+ const c=COURSE_DATA[grade.value][course.value];
+ const tuition=parseInt(freq.value,10);
+ document.getElementById("resultWrap").style.display="block";
+ document.getElementById("tuition").textContent="授業料："+tuition.toLocaleString()+"円";
+
+ if(c.sub){
+  document.getElementById("fixedFees").style.display="none";
+  document.getElementById("total").textContent="月額目安（税込）："+tuition.toLocaleString()+"円";
+  document.getElementById("materialNote").innerHTML=
+   "＋<br>月額教材費込み<br>※ただし英語選択時は別途教材費1,100円<br>※施設維持費・ICT教材費は含まれません";
+ }else{
+  const total=tuition+3850+1650;
+  document.getElementById("fixedFees").style.display="block";
+  document.getElementById("total").textContent="月額目安（税込）："+total.toLocaleString()+"円";
+  document.getElementById("materialNote").innerHTML=
+   "＋<br>月額教材費別途<br>※選択教科・数によって異なります";
+ }
 }
 </script>
 
