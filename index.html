@@ -33,6 +33,25 @@ color:#ff9800;
 border-radius:10px;}
 .small-note{margin-top:10px;font-size:11px;color:#999;line-height:1.6;}
 .fee-block{margin:10px 0;font-size:14px;text-align:center;color:#555;}
+
+/* 体験予約ボタン（安全版） */
+.reserve-btn{
+display:block;
+margin:20px auto 10px;
+padding:14px;
+text-align:center;
+font-size:16px;
+font-weight:bold;
+background:#ffffff;
+color:#ff9800;
+border:2px solid #ff9800;
+border-radius:999px;
+text-decoration:none;
+}
+.reserve-btn:hover{
+background:#ff9800;
+color:#ffffff;
+}
 </style>
 </head>
 
@@ -87,6 +106,16 @@ ICT教材費　1,650円
 
 <div id="materialNote" class="fee-block"></div>
 
+<!-- 体験予約ボタン -->
+<a
+  href="https://one-juku.com/contact/"
+  target="_blank"
+  rel="noopener"
+  class="reserve-btn"
+>
+無料体験・お問い合わせはこちら
+</a>
+
 <div class="small-note">
 ※表示金額は月額の目安です。<br>
 ※割引制度・キャンペーン情報等詳細は校舎担当者にお問い合わせください。
@@ -107,129 +136,72 @@ h3:"h3"
 
 const priceData={
 g12:{
-wakuwaku:{
-name:"わくわく こくご・さんすうコース",
-prices:{
+wakuwaku:{name:"わくわく こくご・さんすうコース",prices:{
 2:{label:"週2（45分）",price:9900},
 3:{label:"週3（45分）",price:11000},
 4:{label:"週4（45分）",price:14300}
-}
-},
-subscription:{
-name:"小学生サブスクコース",
-flat:19800,
-label:"週6まで通い放題（1コマ45分）"
-}
+}},
+subscription:{name:"小学生サブスクコース",flat:19800,label:"週6まで通い放題（1コマ45分）"}
 },
 g34:{
-elementary:{
-name:"小学生コース",
-prices:{
+elementary:{name:"小学生コース",prices:{
 2:{label:"週2（45分）",price:11000},
 3:{label:"週3（45分）",price:12100},
 4:{label:"週4（45分）",price:15400},
 5:{label:"週5（45分）",price:18700}
-}
-},
-exam:{
-name:"中学受験コース",
-prices:{
+}},
+exam:{name:"中学受験コース",prices:{
 2:{label:"週2（90分）",price:17600},
 3:{label:"週3（90分）",price:23100},
 4:{label:"週4（90分）",price:28600}
-}
-},
-subscription:{
-name:"小学生サブスクコース",
-flat:24750,
-label:"週6まで通い放題（1コマ45分）"
-}
+}},
+subscription:{name:"小学生サブスクコース",flat:24750,label:"週6まで通い放題（1コマ45分）"}
 },
 g56:{
-elementary:{
-name:"小学生コース",
-prices:{
+elementary:{name:"小学生コース",prices:{
 1:{label:"週1（90分＋45分）",price:16500},
 2:{label:"週2（90分）",price:19800},
 3:{label:"週3（90分）",price:25300},
 4:{label:"週4（90分）",price:30800}
-}
-},
-exam:{
-name:"中学受験コース",
-prices:{
+}},
+exam:{name:"中学受験コース",prices:{
 2:{label:"週2（90分）",price:19800},
 3:{label:"週3（90分）",price:25300},
 4:{label:"週4（90分）",price:30800}
-}
-},
-subscription:{
-name:"小学生サブスクコース",
-flat:29800,
-label:"週3まで通い放題（1コマ90分）"
-}
+}},
+subscription:{name:"小学生サブスクコース",flat:29800,label:"週3まで通い放題（1コマ90分）"}
 },
 j12:{
-junior:{
-name:"中学生コース",
-prices:{
+junior:{name:"中学生コース",prices:{
 2:{label:"週2（90分）",price:25300},
 3:{label:"週3（90分）",price:34100},
 4:{label:"週4（90分）",price:42900}
-}
-},
-subscription:{
-name:"中学生サブスクコース",
-flat:41800,
-label:"週3まで通い放題（1コマ90分）"
-}
+}},
+subscription:{name:"中学生サブスクコース",flat:41800,label:"週3まで通い放題（1コマ90分）"}
 },
 j3:{
-examhs:{
-name:"高校受験コース",
-prices:{
+examhs:{name:"高校受験コース",prices:{
 2:{label:"週2（90分）",price:26950},
 3:{label:"週3（90分）",price:37950},
 4:{label:"週4（90分）",price:48950}
-}
-},
-subscription:{
-name:"中学生サブスクコース",
-flat:48950,
-label:"週3まで通い放題（1コマ90分）"
-}
+}},
+subscription:{name:"中学生サブスクコース",flat:48950,label:"週3まで通い放題（1コマ90分）"}
 },
 h12:{
-high:{
-name:"高校生コース",
-prices:{
-1:{label:"週1（45分）",price:5500}
-}
-},
-high1on1:{
-name:"高校生個別指導コース",
-prices:{
+high:{name:"高校生コース",prices:{1:{label:"週1（45分）",price:5500}}},
+high1on1:{name:"高校生個別指導コース",prices:{
 2:{label:"週2（45分）",price:20900},
 3:{label:"週3（45分）",price:28600},
 4:{label:"週4（45分）",price:36300}
-}
-}
+}}
 },
 h3:{
-high:{
-name:"高校生コース",
-prices:{
-1:{label:"週1（45分）",price:5500}
-}
-},
-high1on1:{
-name:"高校生個別指導コース",
-prices:{
+high:{name:"高校生コース",prices:{1:{label:"週1（45分）",price:5500}}},
+high1on1:{name:"高校生個別指導コース",prices:{
 2:{label:"週2（45分）",price:22000},
 3:{label:"週3（45分）",price:29700},
 4:{label:"週4（45分）",price:38500}
-}
-}
+}}
 }
 };
 
@@ -256,7 +228,6 @@ freq.innerHTML='<option value="" selected disabled>選択してください</opt
 resultWrap.style.display="none";
 const group=gradeGroup[grade.value];
 const data=priceData[group][course.value];
-
 if(data.prices){
 for(const w in data.prices){
 const opt=document.createElement("option");
