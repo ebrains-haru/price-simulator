@@ -24,7 +24,7 @@ body {
 h1 {
   text-align: center;
   font-size: 22px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .block {
@@ -45,7 +45,7 @@ select {
 
 button {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 22px;
   padding: 14px;
   font-size: 16px;
   font-weight: bold;
@@ -55,14 +55,26 @@ button {
   border-radius: 999px;
 }
 
-.result {
+.result-wrap {
   margin-top: 24px;
-  padding: 14px;
+  display: none;
+}
+
+#tuition {
+  font-size: 16px;
+  text-align: center;
+  font-weight: bold;
+}
+
+#total {
   background: #ffffff;
   border-radius: 10px;
-  font-size: 18px;
+  padding: 14px;
+  font-size: 20px;
   font-weight: bold;
   text-align: center;
+  color: #ff9800;
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -86,9 +98,6 @@ button {
       <option value="j1">中1</option>
       <option value="j2">中2</option>
       <option value="j3">中3</option>
-      <option value="h1">高1</option>
-      <option value="h2">高2</option>
-      <option value="h3">高3</option>
     </select>
   </div>
 
@@ -110,178 +119,137 @@ button {
 
   <button onclick="calculate()">料金を計算する</button>
 
-  <div id="result" style="display:none; margin-top:24px;">
-  <div id="tuition" style="font-size:16px; text-align:center; font-weight:bold;">
-    授業料：―円
+  <!-- 結果 -->
+  <div id="resultWrap" class="result-wrap">
+
+    <div id="tuition">授業料：―円</div>
+
+    <div id="fixedFees" style="margin:10px 0; font-size:14px; text-align:center; color:#555;">
+      施設維持費　3,850円<br>
+      ICT教材費　1,650円
+    </div>
+
+    <div id="total">月額目安（税込）：―円</div>
+
+    <div style="margin:10px 0; font-size:14px; text-align:center; color:#555;">
+      ＋<br>
+      月額教材費別途<br>
+      ※選択教科・数によって異なります
+    </div>
+
+    <div style="margin-top:10px;font-size:11px;color:#999;line-height:1.6;opacity:0.9;">
+      ※表示金額は月額の目安です。<br>
+      ※割引制度・キャンペーン情報等詳細は校舎担当者にお問い合わせください。
+    </div>
+
   </div>
-
-<div style="margin:10px 0; font-size:14px; text-align:center; color:#555;">
-  施設維持費　3,850円<br>
-  ICT教材費　1,650円
-</div>
-
-<div id="total" style="
-  background:#ffffff;
-  border-radius:10px;
-  padding:14px;
-  font-size:20px;
-  font-weight:bold;
-  text-align:center;
-  color:#ff9800;
-">
-  月額目安（税込）：―円
-</div>
-
-<div style="margin:10px 0; font-size:14px; text-align:center; color:#555;">
-  ＋<br>
-  月額教材費別途<br>
-  ※選択教科・数によって異なります
-</div>
-
-</div>
-
-
-  <div
-  style="margin-top:10px;font-size:11px;color:#999;line-height:1.6;opacity:0.9;">
-  －－－<br>
-  ※表示金額は月額の目安です。<br>
-  ※詳細は校舎担当者にお問い合わせください。
-</div>
-
 </div>
 
 <script>
-/* 学年 → グループ */
+/* 学年グループ */
 const gradeGroup = {
-  e1: "g12", e2: "g12",
-  e3: "g34", e4: "g34",
-  e5: "g56", e6: "g56",
-  j1: "j12", j2: "j12",
-  j3: "j3",
-  h1: "h12", h2: "h12",
-  h3: "h3"
+  e1:"g12", e2:"g12",
+  e3:"g34", e4:"g34",
+  e5:"g56", e6:"g56",
+  j1:"j12", j2:"j12",
+  j3:"j3"
 };
 
-/* 料金データ（完全反映） */
+/* 料金データ */
 const priceData = {
-  g12: {
-    wakuwaku: {
-      name: "わくわく こくご・さんすうコース",
-      prices: {1:9900, 2:11000, 3:14300}
-    }
+  g12:{
+    wakuwaku:{name:"わくわく こくご・さんすうコース",prices:{1:9900,2:11000,3:14300}},
+    subscription:{name:"小学生サブスクコース",flat:19800,limits:{6:"週6まで通い放題（1コマ45分）"}}
   },
-  g34: {
-    elementary: {
-      name: "小学生コース",
-      prices: {2:11000, 3:12100, 4:15400, 5:18700}
-    },
-    exam: {
-      name: "中学受験コース",
-      prices: {2:17600, 3:23100, 4:28600}
-    }
+  g34:{
+    elementary:{name:"小学生コース",prices:{2:11000,3:12100,4:15400,5:18700}},
+    exam:{name:"中学受験コース",prices:{2:17600,3:23100,4:28600}},
+    subscription:{name:"小学生サブスクコース",flat:24750,limits:{6:"週6まで通い放題（1コマ45分）"}}
   },
-  g56: {
-    elementary: {
-      name: "小学生コース",
-      prices: {1:16500, 2:19800, 3:25300, 4:30800}
-    },
-    exam: {
-      name: "中学受験コース",
-      prices: {2:19800, 3:25300, 4:30800}
-    }
+  g56:{
+    elementary:{name:"小学生コース",prices:{1:16500,2:19800,3:25300,4:30800}},
+    exam:{name:"中学受験コース",prices:{2:19800,3:25300,4:30800}},
+    subscription:{name:"小学生サブスクコース",flat:29800,limits:{3:"週3まで通い放題（1コマ90分）"}}
   },
-  j12: {
-    junior: {
-      name: "中学生コース",
-      prices: {2:25300, 3:34100, 4:42900}
-    }
+  j12:{
+    junior:{name:"中学生コース",prices:{2:25300,3:34100,4:42900}},
+    subscription:{name:"中学生サブスクコース",flat:41800,limits:{3:"週3まで通い放題（1コマ90分）"}}
   },
-  j3: {
-    examhs: {
-      name: "高校受験コース",
-      prices: {2:26950, 3:37950, 4:48950}
-    }
-  },
-  h12: {
-    high: {
-      name: "高校生コース",
-      prices: {1:5500}
-    },
-    high1on1: {
-      name: "高校生個別指導コース",
-      prices: {2:20900, 3:28600, 4:36300}
-    }
-  },
-  h3: {
-    high: {
-      name: "高校生コース",
-      prices: {1:5500}
-    },
-    high1on1: {
-      name: "高校生個別指導コース",
-      prices: {2:22000, 3:29700, 4:38500}
-    }
+  j3:{
+    examhs:{name:"高校受験コース",prices:{2:26950,3:37950,4:48950}},
+    subscription:{name:"中学生サブスクコース",flat:48950,limits:{3:"週3まで通い放題（1コマ90分）"}}
   }
 };
 
-const grade = document.getElementById("grade");
-const course = document.getElementById("course");
-const freq = document.getElementById("frequency");
-const result = document.getElementById("result");
+const grade=document.getElementById("grade");
+const course=document.getElementById("course");
+const freq=document.getElementById("frequency");
+const resultWrap=document.getElementById("resultWrap");
 
-grade.addEventListener("change", () => {
-  course.innerHTML = '<option value="" selected disabled>選択してください</option>';
-  freq.innerHTML = '<option value="" selected disabled>選択してください</option>';
-  result.style.display = "none";
+grade.addEventListener("change",()=>{
+  course.innerHTML='<option value="" selected disabled>選択してください</option>';
+  freq.innerHTML='<option value="" selected disabled>選択してください</option>';
+  resultWrap.style.display="none";
 
-  const group = gradeGroup[grade.value];
-  const courses = priceData[group];
-
-  for (const key in courses) {
-    const opt = document.createElement("option");
-    opt.value = key;
-    opt.textContent = courses[key].name;
+  const group=gradeGroup[grade.value];
+  for(const key in priceData[group]){
+    const opt=document.createElement("option");
+    opt.value=key;
+    opt.textContent=priceData[group][key].name;
     course.appendChild(opt);
   }
 });
 
-course.addEventListener("change", () => {
-  freq.innerHTML = '<option value="" selected disabled>選択してください</option>';
-  result.style.display = "none";
+course.addEventListener("change",()=>{
+  freq.innerHTML='<option value="" selected disabled>選択してください</option>';
+  resultWrap.style.display="none";
 
-  const group = gradeGroup[grade.value];
-  const prices = priceData[group][course.value].prices;
+  const group=gradeGroup[grade.value];
+  const data=priceData[group][course.value];
 
-  for (const w in prices) {
-    const opt = document.createElement("option");
-    opt.value = w;
-    opt.textContent = `週${w}`;
-    freq.appendChild(opt);
+  if(data.prices){
+    for(const w in data.prices){
+      const opt=document.createElement("option");
+      opt.value=w;
+      opt.textContent=`週${w}`;
+      freq.appendChild(opt);
+    }
+  }
+
+  if(data.limits){
+    for(const w in data.limits){
+      const opt=document.createElement("option");
+      opt.value=w;
+      opt.textContent=data.limits[w];
+      freq.appendChild(opt);
+    }
   }
 });
 
-function calculate() {
-  if (!grade.value || !course.value || !freq.value) {
+function calculate(){
+  if(!grade.value||!course.value||!freq.value){
     alert("すべて選択してください");
     return;
   }
 
-  const group = gradeGroup[grade.value];
-  const tuitionPrice = priceData[group][course.value].prices[freq.value];
+  const group=gradeGroup[grade.value];
+  const data=priceData[group][course.value];
 
-  const facilityFee = 3850;
-  const ictFee = 1650;
-  const totalPrice = tuitionPrice + facilityFee + ictFee;
+  let tuition,total;
+  if(data.flat){
+    tuition=data.flat;
+    total=tuition;
+    document.getElementById("fixedFees").style.display="none";
+  }else{
+    tuition=data.prices[freq.value];
+    total=tuition+3850+1650;
+    document.getElementById("fixedFees").style.display="block";
+  }
 
-  document.getElementById("tuition").textContent =
-    `授業料：${tuitionPrice.toLocaleString()}円`;
-
-  document.getElementById("total").textContent =
-  `月額目安（税込）：${totalPrice.toLocaleString()}円`;
-
-  result.style.display = "block";
+  document.getElementById("tuition").textContent=`授業料：${tuition.toLocaleString()}円`;
+  document.getElementById("total").textContent=`月額目安（税込）：${total.toLocaleString()}円`;
+  resultWrap.style.display="block";
 }
-
 </script>
 
 </body>
