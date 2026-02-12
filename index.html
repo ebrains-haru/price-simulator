@@ -308,7 +308,7 @@ function calculate(){
   document.getElementById("fixedFees").style.display="none";
   document.getElementById("total").textContent="月額目安（税込）："+tuition.toLocaleString()+"円";
   document.getElementById("materialNote").innerHTML=
-   "＋<br>月額教材費込み<br>※ただし英語選択時は別途教材費1,100円<br>※施設維持費・ICT教材費は含まれません";
+   "＋<br>月額教材費込み<br>※ただし英語選択時は別途教材費1,100円が月額でかかります。";
  }else{
   const total=tuition+3850+1650;
   document.getElementById("fixedFees").style.display="block";
