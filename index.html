@@ -21,6 +21,15 @@ h1{
   border-radius:12px;
 }
 
+/* ★ タイトル下注釈 */
+.title-note{
+  font-size:12px;
+  line-height:1.7;
+  color:#777;
+  text-align:center;
+  margin:-12px 0 24px;
+}
+
 .block{margin-bottom:18px;}
 label{display:block;font-weight:bold;margin-bottom:6px;}
 select{width:100%;padding:10px;font-size:16px;}
@@ -40,7 +49,6 @@ button{
 .result-wrap{margin-top:24px;display:none;}
 #tuition{text-align:center;font-weight:bold;}
 
-/* ★ 月額目安：濃い黄緑に変更 */
 #total{
   background:#fff;
   padding:14px;
@@ -48,7 +56,7 @@ button{
   font-size:20px;
   font-weight:bold;
   text-align:center;
-  color:#689f38;
+  color:#689f38; /* 濃い黄緑 */
   border-radius:10px;
 }
 
@@ -91,7 +99,14 @@ button{
 
 <body>
 <div class="simulator">
+
 <h1>月額料金シミュレーター</h1>
+
+<p class="title-note">
+※one塾では入塾時にお子さまのご状況や目標、ご予算等を確認させていただき、
+最適な通塾回数や教科をご提案させていただきます。<br>
+本シミュレーターでは金額感の目安としてお好きな授業回数をお試しください。
+</p>
 
 <div class="block">
 <label>学年</label>
@@ -181,7 +196,6 @@ exam:{name:"中学受験コース",prices:{
 2:{label:"週2（90分）",price:19800},
 3:{label:"週3（90分）",price:25300},
 4:{label:"週4（90分）",price:30800}}},
-/* ★ 小5・小6 サブスク金額修正 */
 subscription:{name:"小学生サブスクコース",flat:29700,label:"週3まで通い放題（1コマ90分）"}
 },
 j12:{
@@ -263,5 +277,6 @@ document.getElementById("total").textContent=`月額目安（税込）：${total
 resultWrap.style.display="block";
 }
 </script>
+
 </body>
 </html>
