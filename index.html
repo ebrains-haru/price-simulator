@@ -84,7 +84,6 @@ button {
 <div class="simulator">
   <h1>月額料金シミュレーター</h1>
 
-  <!-- 学年 -->
   <div class="block">
     <label>学年</label>
     <select id="grade">
@@ -101,7 +100,6 @@ button {
     </select>
   </div>
 
-  <!-- コース -->
   <div class="block">
     <label>コース</label>
     <select id="course">
@@ -109,7 +107,6 @@ button {
     </select>
   </div>
 
-  <!-- 週回数 -->
   <div class="block">
     <label>週回数</label>
     <select id="frequency">
@@ -119,7 +116,6 @@ button {
 
   <button onclick="calculate()">料金を計算する</button>
 
-  <!-- 結果 -->
   <div id="resultWrap" class="result-wrap">
 
     <div id="tuition">授業料：―円</div>
@@ -131,7 +127,7 @@ button {
 
     <div id="total">月額目安（税込）：―円</div>
 
-    <div style="margin:10px 0; font-size:14px; text-align:center; color:#555;">
+    <div id="materialNote" style="margin:10px 0; font-size:14px; text-align:center; color:#555;">
       ＋<br>
       月額教材費別途<br>
       ※選択教科・数によって異なります
@@ -146,7 +142,6 @@ button {
 </div>
 
 <script>
-/* 学年グループ */
 const gradeGroup = {
   e1:"g12", e2:"g12",
   e3:"g34", e4:"g34",
@@ -155,7 +150,6 @@ const gradeGroup = {
   j3:"j3"
 };
 
-/* 料金データ */
 const priceData = {
   g12:{
     wakuwaku:{name:"わくわく こくご・さんすうコース",prices:{1:9900,2:11000,3:14300}},
@@ -236,18 +230,33 @@ function calculate(){
   const data=priceData[group][course.value];
 
   let tuition,total;
+  const materialNote=document.getElementById("materialNote");
+
   if(data.flat){
     tuition=data.flat;
     total=tuition;
     document.getElementById("fixedFees").style.display="none";
+
+    materialNote.innerHTML=`
+      ＋<br>
+      月額教材費込み<br>
+      ※ただし英語を選択の場合のみ、別途教材費1,100円が毎月かかります。
+    `;
   }else{
     tuition=data.prices[freq.value];
     total=tuition+3850+1650;
     document.getElementById("fixedFees").style.display="block";
+
+    materialNote.innerHTML=`
+      ＋<br>
+      月額教材費別途<br>
+      ※選択教科・数によって異なります
+    `;
   }
 
   document.getElementById("tuition").textContent=`授業料：${tuition.toLocaleString()}円`;
   document.getElementById("total").textContent=`月額目安（税込）：${total.toLocaleString()}円`;
+
   resultWrap.style.display="block";
 }
 </script>
